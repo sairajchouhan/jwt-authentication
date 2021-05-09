@@ -1,7 +1,16 @@
-import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Ctx,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql'
 import { hash, compare } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
 import { User } from './entity/User'
+import { MyContext } from './MyContext'
+import { createAccessToken, createRefreshToken } from './auth'
 
 @ObjectType()
 class LoginResponse {
@@ -19,7 +28,8 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Arg('email') email: string,
-    @Arg('passowrd') password: string
+    @Arg('passowrd') password: string,
+    @Ctx() { res }: MyContext
   ): Promise<LoginResponse> {
     const user = await User.findOne({ where: { email } })
 
@@ -32,11 +42,13 @@ export class UserResolver {
       throw new Error('bad passoword')
     }
 
+    res.cookie('jid', createRefreshToken(user), {
+      httpOnly: true,
+    })
+
     // login successful
     return {
-      accessToken: sign({ userId: user.id }, 'asleghpqwouernga', {
-        expiresIn: '15m',
-      }),
+      accessToken: createAccessToken(user),
     }
   }
 
