@@ -26,16 +26,13 @@ import { sendRefreshToken } from './sendRefreshToken'
   })
 
   app.post('/refresh_token', cookieParser(), async (req, res) => {
-    console.log(1)
     const token = req.cookies.jid
     if (!token) {
-      console.log(2)
       return res.send({ ok: false, accessToken: '' })
     }
     let payload: any = null
     try {
       payload = verify(token, process.env.REFRESH_TOKEN_SECRET!)
-      console.log(payload)
     } catch (err) {
       console.log(err)
       return res.send({ ok: false, accessToken: '' })
