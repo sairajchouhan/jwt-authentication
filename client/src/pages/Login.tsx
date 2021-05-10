@@ -6,17 +6,18 @@ interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
   const history = useHistory()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('sairaj2119@gmail.com')
+  const [password, setPassword] = useState('aunzbedi')
   const [login] = useLoginMutation()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       const res = await login({ variables: { email, password } })
-      console.log(res.data)
+      localStorage.setItem('at', res.data?.login.accessToken as any)
       setEmail('')
       setPassword('')
+      history.push('/')
     } catch (err) {
       console.log(err)
     }

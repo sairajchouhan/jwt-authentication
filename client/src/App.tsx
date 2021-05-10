@@ -1,4 +1,5 @@
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'
+import Bye from './pages/Bye'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -20,6 +21,9 @@ const App = () => {
               <Link to="/">Home</Link>
             </li>
             <li>
+              <Link to="/bye">Bye</Link>
+            </li>
+            <li>
               <Link to="/register">Register</Link>
             </li>
             <li>
@@ -31,7 +35,8 @@ const App = () => {
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/login" component={Login} />
-        <Route path="/register" exact component={Register} />
+        <Route path="/register" component={Register} />
+        <Route path="/bye" exact component={Bye} />
       </Switch>
     </BrowserRouter>
   )
