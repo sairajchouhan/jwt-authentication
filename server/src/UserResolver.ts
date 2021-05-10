@@ -25,15 +25,20 @@ class LoginResponse {
 
 @Resolver()
 export class UserResolver {
-  @Query(() => [User])
-  users() {
-    return User.find()
-  }
-
   @Query(() => String)
   @UseMiddleware(isAuth)
   bye(@Ctx() { payload }: MyContext) {
     return 'your userId is ' + payload?.userId
+  }
+
+  @Query(() => String)
+  hello() {
+    return 'Hello!!'
+  }
+
+  @Query(() => [User])
+  users() {
+    return User.find()
   }
 
   @Mutation(() => LoginResponse)
