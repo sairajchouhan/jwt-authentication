@@ -1,13 +1,9 @@
-import { gql, useQuery } from '@apollo/client'
+import { useHelloQuery } from './generated/graphql'
 
 const App = () => {
-  const { data, loading, error } = useQuery(gql`
-    query Hello {
-      hello
-    }
-  `)
+  const { data, loading, error } = useHelloQuery()
 
-  if (loading) return <h1>Loading....</h1>
+  if (loading || !data) return <h1>Loading....</h1>
   if (error) {
     return (
       <div>
@@ -21,7 +17,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>{JSON.stringify(data)}</h1>
+      <h1>{data.hello}</h1>
     </div>
   )
 }
