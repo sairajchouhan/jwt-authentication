@@ -18,14 +18,18 @@ import { sendRefreshToken } from './sendRefreshToken'
   app.get('/', (_, res) => {
     res.send('working')
   })
+
   app.post('/refresh_token', cookieParser(), async (req, res) => {
+    console.log(1)
     const token = req.cookies.jid
     if (!token) {
+      console.log(2)
       return res.send({ ok: false, accessToken: '' })
     }
     let payload: any = null
     try {
       payload = verify(token, process.env.REFRESH_TOKEN_SECRET!)
+      console.log(payload)
     } catch (err) {
       console.log(err)
       return res.send({ ok: false, accessToken: '' })
@@ -34,6 +38,11 @@ import { sendRefreshToken } from './sendRefreshToken'
     if (!user) {
       return res.send({ ok: false, accessToken: '' })
     }
+
+    if (user.tokenVersion !== payload.tokenVersion) {
+      return res.send({ ok: false, accessToken: '' })
+    }
+
     sendRefreshToken(res, createRefreshToken(user))
 
     return res.send({ ok: true, accessToken: createAccessToken(user) })
